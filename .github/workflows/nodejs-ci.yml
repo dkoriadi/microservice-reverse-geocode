@@ -1,0 +1,29 @@
+name: CI for Node.js Serverless Application
+
+on:
+  push:
+    branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./handlers
+
+    name: Build and Test
+    steps:
+    - uses: actions/checkout@v2
+      name: Check out repository
+    - uses: actions/setup-node@v1
+      name: Set up Node.js
+      with:
+        node-version: 14
+    - run: |
+        npm ci
+        npm test
+      name: Build and Test
+      

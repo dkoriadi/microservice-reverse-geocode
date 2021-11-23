@@ -1,0 +1,166 @@
+openapi: 3.0.1
+x-amazon-apigateway-policy:
+  # Allow all traffic to all resources (a.k.a. routes) 
+  Version: "2012-10-17"
+  Statement:
+    - Effect: "Allow"
+      Principal: "*"
+      Action: "execute-api:Invoke"
+      Resource: "*"
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0beta
+# See below for api-key
+x-amazon-apigateway-api-key-source: "HEADER"
+paths:
+  # Routes/resources within API GW
+  /v1/oauth2:
+    post:
+      tags:
+        - oauth2_endpoint
+      summary: API to handle no entity as path variable
+      description: API apt description
+      requestBody:
+        content:
+          'application/x-www-form-urlencoded':
+            schema:
+              properties:
+                client_id:
+                  description: Client Id issued by identity provider
+                  type: string
+                client_secret:
+                  description: Client secret issued by identity provider
+                  type: string
+                grant_type:
+                  description: OAuth2 grant type, client credentials by default
+                  type: string
+      responses:
+        "200":
+          description: Returns access token if valid credentials are given
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                    description: Bearer token
+                  expires_in:
+                    type: integer
+                    description: Number of seconds before access token expires
+                  access_token:
+                    type: string
+                    description: Access token in the form of JWT
+        "401":
+          description: Client credentials are missing or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+        default: # 500
+          description: Unexpected error
+          content: 
+            application/json:
+              schema:
+                type: object
+      x-amazon-apigateway-integration:
+        uri: ${uri_arn} # Access external variable from *.tf file 
+        passthroughBehavior: when_no_match # Don't transform method request body if no matching mapping templates
+        type: "aws_proxy" # Lambda proxy integration
+        httpMethod: "POST" # Must always be POST for Lambda proxy
+      security:
+        # OpenAPI security requirement object
+        - apiKey: []
+  /v1/geocode:
+    get:
+      tags:
+        - reverse_geocode_endpoint
+      summary: API to handle entity as path variable
+      description: API apt description
+      parameters:
+        # Refer to: https://swagger.io/specification/ 
+        # <route>?lat={query}&lon={query}
+        - name: lat 
+          in: query #query/header/path/cookie
+          description: Latitude
+          # Schema object as specified by OpenAPI/Swagger
+          schema:
+            type: string 
+            pattern: ^.*$ # regex - match everything from start to end of the string
+        - name: lon 
+          in: query #query/header/path/cookie
+          description: Longitude
+          # Schema object as specified by OpenAPI/Swagger
+          schema:
+            type: string 
+            pattern: ^.*$ # regex - match everything from start to end of the string
+      responses:
+        "200":
+          description: "Dynamics specified entity returned with query results"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lat:
+                    type: string
+                    description: Latitude from query string
+                  lon:
+                    type: string
+                    description: Longitude from query string
+                  address:
+                    type: string
+                    description: Address of coordinates
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                type: object
+        "401":
+          description: "Unauthorised due to invalid access token"
+          content:
+            application/json:
+              schema:
+                type: object
+        default:
+          description: Unexpected error
+          content: 
+            application/json:
+              schema:
+                type: object
+      x-amazon-apigateway-integration:
+        uri: ${uri_arn}
+        passthroughBehavior: when_no_match
+        type: "aws_proxy"
+        httpMethod: "POST" # Must always be POST for Lambda proxy
+      security:
+        - apiKey: []
+schemes:
+  - https
+components:
+  schemas:
+    Error:
+      type: "object"
+      properties: 
+        code:
+          type: "string"
+          pattern: ^.*$
+          minLength: 1
+          maxLength: 10
+        message: 
+          type: "string"
+          pattern: ^.*$
+          minLength: 1
+          maxLength: 3000
+      required:
+        - message
+  securitySchemes:
+    # AWS REST API generates Api Key to be passed as header
+    apiKey:
+      type: "apiKey"
+      name: x-api-key
+      in: "header"
+security:
+  - apiKey: []

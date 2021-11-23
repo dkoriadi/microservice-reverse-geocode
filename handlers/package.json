@@ -1,0 +1,23 @@
+{
+  "name": "microservice-reverse-geocode",
+  "version": "1.0.0",
+  "description": "Microservice for reverse geocoding via OAuth2",
+  "main": "app.js",
+  "repository": "https://github.com/dkoriadi/microservice-reverse-geocode",
+  "author": "dkoriadi",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "scripts": {
+    "test": "mocha tests/unit/test-handler.js --require mocha-suppress-logs --timeout 30000",
+    "integ-test": "mocha tests/integration/test-integration-handler.js --timeout 30000",
+    "start-local": "sam local start-api -t ../template.yaml"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.4.0",
+    "mocha-suppress-logs": "^0.3.1"
+  }
+}

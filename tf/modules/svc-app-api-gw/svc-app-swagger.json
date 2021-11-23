@@ -1,0 +1,245 @@
+﻿{
+  "openapi": "3.0.1",
+  "x-amazon-apigateway-policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": "execute-api:Invoke",
+        "Resource": "*"
+      }
+    ]
+  },
+  "info": {
+    "title": "Sample API",
+    "description": "API description in Markdown.",
+    "version": "1.0.0beta"
+  },
+  "x-amazon-apigateway-api-key-source": "HEADER",
+  "paths": {
+    "/v1/oauth2": {
+      "post": {
+        "tags": [
+          "oauth2_endpoint"
+        ],
+        "summary": "API to handle no entity as path variable",
+        "description": "API apt description",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "client_id": {
+                    "description": "Client Id issued by identity provider",
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "description": "Client secret issued by identity provider",
+                    "type": "string"
+                  },
+                  "grant_type": {
+                    "description": "OAuth2 grant type, client credentials by default",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns access token if valid credentials are given",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token_type": {
+                      "type": "string",
+                      "description": "Bearer token"
+                    },
+                    "expires_in": {
+                      "type": "integer",
+                      "description": "Number of seconds before access token expires"
+                    },
+                    "access_token": {
+                      "type": "string",
+                      "description": "Access token in the form of JWT"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client credentials are missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "uri": "${uri_arn}",
+          "passthroughBehavior": "when_no_match",
+          "type": "aws_proxy",
+          "httpMethod": "POST"
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/v1/geocode": {
+      "get": {
+        "tags": [
+          "reverse_geocode_endpoint"
+        ],
+        "summary": "API to handle entity as path variable",
+        "description": "API apt description",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude",
+            "schema": {
+              "type": "string",
+              "pattern": "^.*$"
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude",
+            "schema": {
+              "type": "string",
+              "pattern": "^.*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dynamics specified entity returned with query results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "lat": {
+                      "type": "string",
+                      "description": "Latitude from query string"
+                    },
+                    "lon": {
+                      "type": "string",
+                      "description": "Longitude from query string"
+                    },
+                    "address": {
+                      "type": "string",
+                      "description": "Address of coordinates"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorised due to invalid access token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "uri": "${uri_arn}",
+          "passthroughBehavior": "when_no_match",
+          "type": "aws_proxy",
+          "httpMethod": "POST"
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^.*$",
+            "minLength": 1,
+            "maxLength": 10
+          },
+          "message": {
+            "type": "string",
+            "pattern": "^.*$",
+            "minLength": 1,
+            "maxLength": 3000
+          }
+        },
+        "required": [
+          "message"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "name": "x-api-key",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}
