@@ -1,4 +1,4 @@
-name: CI for Node.js Serverless Application
+name: build
 
 on:
   push:
