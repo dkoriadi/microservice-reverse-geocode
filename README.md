@@ -1,3 +1,5 @@
+[![build](https://github.com/dkoriadi/microservice-reverse-geocode/actions/workflows/nodejs-ci.yml/badge.svg)](https://github.com/dkoriadi/microservice-reverse-geocode/actions/workflows/nodejs-ci.yml)
+
 # reverse-geocode-microservice
 
 A serverless applcation that can be deployed into AWS cloud using Terraform (IaC).
