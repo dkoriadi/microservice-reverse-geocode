@@ -45,6 +45,7 @@ For API Gateway, the resources are defined using a YAML/JSON [Swagger](https://s
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
+- [Terraform](https://www.terraform.io/downloads.html)
 - [Localstack](https://github.com/localstack/localstack)
 
 
@@ -62,7 +63,7 @@ cd bash
 
 3. Build Docker image and pull Localstack image
 ```sh
-sh localstack_docker.sh # create docker containers for handler and localstack
+sh localstack_docker.sh # create docker containers for Node.js microservice and Localstack
 ``` 
 
 4. Deploy on Localstack for integration testing
