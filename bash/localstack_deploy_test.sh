@@ -7,6 +7,6 @@ terraform init
 # terraform validate
 terraform apply -auto-approve
 terraform output > "./../../../bash/output_localstack.txt"
-cd "./../../../handlers"
-npm install
-npm run integ-test
+cd "./../../../bash"
+# --tty to enable colours
+docker run --tty lambda-handler npm run integ-test

@@ -44,8 +44,7 @@ For API Gateway, the resources are defined using a YAML/JSON [Swagger](https://s
 
 ### Prerequisites
 
-- npm
-- [Docker](https://hub.docker.com/editions/community/docker-ce-desktop-windows)
+- [Docker](https://www.docker.com/products/docker-desktop)
 - [Localstack](https://github.com/localstack/localstack)
 
 
@@ -61,14 +60,13 @@ git clone https://github.com/dkoriadi/reverse-geocode-microservice.git
 cd bash
 ```
 
-3. Unit test Lambda first
+3. Build Docker image and pull Localstack image
 ```sh
-sh lambda_unit_tests.sh
+sh localstack_docker.sh # create docker containers for handler and localstack
 ``` 
 
 4. Deploy on Localstack for integration testing
 ```sh
-sh localstack_docker.sh # create docker container
 sh localstack_deploy_test.sh # do this from another shell
 ``` 
 

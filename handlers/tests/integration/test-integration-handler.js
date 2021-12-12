@@ -5,8 +5,8 @@ const chai = require('chai');
 const expect = chai.expect;
 const axios = require('axios')
 
-var postUrl = "http://localhost:4566/restapis/id123/dev/_user_request_/v1/oauth2";
-var getUrl = "http://localhost:4566/restapis/id123/dev/_user_request_/v1/geocode";
+var postUrl = "http://host.docker.internal:4566/restapis/id123/dev/_user_request_/v1/oauth2";
+var getUrl = "http://host.docker.internal:4566/restapis/id123/dev/_user_request_/v1/geocode";
 var token;
 
 let successResponse = function(result) {
